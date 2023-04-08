@@ -17,6 +17,8 @@ local function create_floating_window()
         col = col,
     }
 
+    local win = vim.api.nvim_open_win(buf, false, opts)
+
     -- Border buffer and window
     local border_buf = vim.api.nvim_create_buf(false, true)
     local border_opts = {
@@ -63,7 +65,6 @@ local function create_floating_window()
     -- Add highlights to the title
     vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, 0, left_padding, left_padding + title_len)
 
-    local win = vim.api.nvim_open_win(buf, false, opts)
 
     return buf, win
 end
