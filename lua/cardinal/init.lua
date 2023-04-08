@@ -47,29 +47,23 @@ local function create_floating_window()
     vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
 
     -- Draw border lines
-    local border_lines = {
-        top_line,
-        border_chars[2] .. string.rep(" ", win_width) .. border_chars[2],
-        border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
-    }
+    local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
+    local middle_line = border_chars[2] .. string.rep(" ", win_width) .. border_chars[2]
+    local bottom_line = border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
+
+    vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
     for i = 2, win_height do
-        vim.api.nvim_buf_set_lines(border_buf, i - 1, i, false, {border_lines[2]})
+        vim.api.nvim_buf_set_lines(border_buf, i - 1, i, false, {middle_line})
     end
-    vim.api.nvim_buf_set_lines(border_buf, win_height, win_height + 1, false, {border_lines[3]})
+    vim.api.nvim_buf_set_lines(border_buf, win_height, win_height + 1, false, {bottom_line})
 
     -- Set border highlight group
     local highlight_group = "CardinalBorder"
     vim.cmd(string.format("highlight %s guifg=#FF0000", highlight_group))
 
-    -- Add highlights to top and bottom lines
-    vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, 0, 0, left_padding)
-    vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, 0, left_padding + title_len, -1)
-    vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, win_height + 1, 0, -1)
-
-    -- Add highlights to middle lines
-    for i = 1, win_height do
-        vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, i, 0, 1)
-        vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, i, win_width + 1, -1)
+    -- Add highlights to the entire border
+    for i = 0, win_height + 1 do
+        vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, i, 0, -1)
     end
 
     -- Add highlights to the title
