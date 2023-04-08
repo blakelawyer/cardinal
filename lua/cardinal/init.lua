@@ -74,11 +74,11 @@ local function Cardinal()
 
     vim.cmd('highlight RedText guifg=#ff0000')
 
-    vim.api.nvim_buf_set_extmark(buf, 0, 0, {
+    vim.api.nvim_buf_set_extmark(buf, -1, 0, 0, {
       end_col = -1,
       hl_group = 'RedText',
       right_gravity = false,
-      virt_text = {"Welcome to Cardinal!"}
+      virt_text = {"Welcome to cardinal!"}
     })
 
     vim.api.nvim_win_set_option(win, "wrap", false)
