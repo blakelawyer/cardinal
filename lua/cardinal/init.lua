@@ -72,17 +72,11 @@ end
 local function Cardinal()
     local buf, win = create_floating_window()
 
-    vim.cmd('highlight RedText guifg=#ff0000')
-
-    -- Create a new namespace for the current buffer
-    local ns_id = vim.api.nvim_create_namespace('cardinal')
-
-    vim.api.nvim_buf_set_extmark(buf, ns_id, 0, 0, {
-      end_col = 5,
-      hl_group = 'RedText',
-      right_gravity = false,
-      virt_text = {"Welcome to cardinal!"}
-    })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"   \\"})
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"   (o>"})
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"\\_//)"})
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {" \_/_)"})
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"  _|_"})
 
     vim.api.nvim_win_set_option(win, "wrap", false)
 
