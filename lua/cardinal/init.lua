@@ -37,6 +37,15 @@ local function create_floating_window()
         "╔", "╗", "╝", "╚"
     }
 
+    local title = "Cardinal"
+    local title_len = #title
+    local left_padding = math.floor((win_width - title_len) / 2)
+    local right_padding = win_width - left_padding - title_len
+
+    local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
+
+    vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
+
     local top_line = border_chars[5] .. string.rep(border_chars[1], win_width) .. border_chars[6]
     local mid_line = border_chars[2] .. string.rep(" ", win_width) .. border_chars[4]
     local bot_line = border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
@@ -50,7 +59,17 @@ local function create_floating_window()
     -- Set border highlight group
     local highlight_group = "CardinalBorder"
     vim.cmd(string.format("highlight %s guifg=#FF0000", highlight_group))
+
+    -- Add highlights to top and bottom lines
     vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, 0, 0, -1)
+    vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, win_height + 1, 0, -1)
+
+    -- Add highlights to middle lines
+    for i = 1, win_height do
+        vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, i, 0, 1)
+        vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, i, win_width + 1, -1)
+    end
+
 
     return buf, win
 end
