@@ -36,15 +36,16 @@ local function create_floating_window()
         "═", "║", "═", "║",
         "╔", "╗", "╝", "╚"
     }
-    local border_lines = {
-        border_chars[5] .. string.rep(border_chars[1], win_width) .. border_chars[6],
-        string.rep(border_chars[2], win_height),
-        border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
-    }
 
-    vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {border_lines[1]})
-    vim.api.nvim_buf_set_lines(border_buf, 1, win_height + 1, false, {border_lines[2]})
-    vim.api.nvim_buf_set_lines(border_buf, win_height + 1, -1, false, {border_lines[3]})
+    local top_line = border_chars[5] .. string.rep(border_chars[1], win_width) .. border_chars[6]
+    local mid_line = border_chars[2] .. string.rep(" ", win_width) .. border_chars[4]
+    local bot_line = border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
+
+    vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
+    for i = 1, win_height do
+        vim.api.nvim_buf_set_lines(border_buf, i, i + 1, false, {mid_line})
+    end
+    vim.api.nvim_buf_set_lines(border_buf, win_height + 1, -1, false, {bot_line})
 
     -- Set border highlight group
     local highlight_group = "CardinalBorder"
