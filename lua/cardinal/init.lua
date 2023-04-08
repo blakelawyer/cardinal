@@ -70,11 +70,13 @@ local function create_floating_window()
 end
 
 local function set_keymaps(buf, win, border_win)
+    local close_windows_command = string.format(':call luaeval("require(\\"cardinal\\").close_windows(%d, %d)")<CR>', win, border_win)
+
     local mappings = {
         ['j'] = ':call luaeval("require(\\"cardinal\\").move_cursor(1)")<CR>',
         ['k'] = ':call luaeval("require(\\"cardinal\\").move_cursor(-1)")<CR>',
         ['<CR>'] = ':call luaeval("require(\\"cardinal\\").select_option()")<CR>',
-        ['<Esc>'] = string.format(':call luaeval("require(\\"cardinal\\").close_windows(%d, %d)")<CR>', win, border_win),
+        ['<Esc>'] = close_windows_command,
     }
 
     for key, action in pairs(mappings) do
