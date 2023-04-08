@@ -1,9 +1,7 @@
-print('Hello World')
-
-local function some_function()
+local function Cardinal()
     print("Hello from function")
 end
 
 return {
-    some_function = some_function
+    Cardinal = Cardinal
 }
