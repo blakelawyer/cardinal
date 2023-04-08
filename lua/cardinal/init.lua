@@ -72,7 +72,7 @@ end
 local function Cardinal()
     local buf, win = create_floating_window()
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {" \\\\"})
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"   \\\\"})
     vim.api.nvim_buf_set_lines(buf, 1, -1, false, {"   (o>"})
     vim.api.nvim_buf_set_lines(buf, 2, -1, false, {"\\\\_//)"})
     vim.api.nvim_buf_set_lines(buf, 3, -1, false, {" \\_/_)"})
