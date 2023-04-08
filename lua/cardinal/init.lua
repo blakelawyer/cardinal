@@ -69,6 +69,18 @@ local function create_floating_window()
     return buf, win
 end
 
+local function set_keymaps(buf)
+    local mappings = {
+        ['j'] = 'lua require("cardinal").move_cursor(1)',
+        ['k'] = 'lua require("cardinal").move_cursor(-1)',
+        ['<CR>'] = 'lua require("cardinal").select_option()',
+    }
+
+    for key, action in pairs(mappings) do
+        vim.api.nvim_buf_set_keymap(buf, 'n', key, action, {noremap = true, silent = true})
+    end
+end
+
 local function Cardinal()
     local buf, win = create_floating_window()
 
@@ -94,7 +106,26 @@ local function Cardinal()
         vim.api.nvim_buf_add_highlight(buf, -1, "CardinalBird", i - 1, 0, -1)
     end
 
+    -- Add menu options
+    local menu_options = {
+        "1.",
+        "2.",
+        "3.",
+        "4.",
+        "5.",
+    }
+
+    local start_line = #bird_lines + 2
+
+    for i, option in ipairs(menu_options) do
+        vim.api.nvim_buf_set_lines(buf, start_line + i - 1, start_line + i, false, {option})
+    end
+
     vim.api.nvim_win_set_option(win, "wrap", false)
+    vim.api.nvim_win_set_cursor(win, {start_line, 0})
+
+    -- Set keymaps for navigation and selection
+    set_keymaps(buf)
 
 end
 
