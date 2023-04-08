@@ -78,6 +78,8 @@ local function Cardinal()
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"Hello from the floating window!"})
     vim.api.nvim_win_set_option(win, "wrap", false)
+
+    vim.cmd("redraw")
 end
 
 vim.api.nvim_command('command! Cardinal lua require("cardinal").Cardinal()')
