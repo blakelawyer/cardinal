@@ -40,9 +40,9 @@ local function create_floating_window()
     local left_padding = math.floor((win_width - title_len) / 2)
     local right_padding = win_width - left_padding - title_len
 
-    local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
+    -- local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
 
-    vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
+    -- vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
 
     -- Draw border lines
     local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
@@ -67,7 +67,7 @@ local function create_floating_window()
     -- Add highlights to the title
     vim.api.nvim_buf_add_highlight(border_buf, -1, highlight_group, 0, left_padding, left_padding + title_len)
 
-    local win = vim.api.nvim_open_win(buf, true, opts)
+    local win = vim.api.nvim_open_win(buf, false, opts)
 
     return buf, win
 end
