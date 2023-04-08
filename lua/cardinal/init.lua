@@ -72,11 +72,27 @@ end
 local function Cardinal()
     local buf, win = create_floating_window()
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"   \\\\"})
-    vim.api.nvim_buf_set_lines(buf, 1, -1, false, {"   (o>"})
-    vim.api.nvim_buf_set_lines(buf, 2, -1, false, {"\\\\_//)"})
-    vim.api.nvim_buf_set_lines(buf, 3, -1, false, {" \\_/_)"})
-    vim.api.nvim_buf_set_lines(buf, 4, -1, false, {"  _|_"})
+    -- Set bird text highlight group
+    local bird_highlight_group = "CardinalBird"
+    vim.cmd(string.format("highlight %s guifg=#FF0000", bird_highlight_group))
+
+    local bird_lines = {
+        "   \\\\",
+        "   (o>",
+        "\\\\_//)",
+        " \\_/_)",
+        "  _|_"
+    }
+
+    -- Set bird lines
+    for i, line in ipairs(bird_lines) do
+        vim.api.nvim_buf_set_lines(buf, i - 1, i, false, {line})
+    end
+
+    -- Set bird text highlight
+    for i, _ in ipairs(bird_lines) do
+        vim.api.nvim_buf_add_highlight(buf, -1, "CardinalBird", i - 1, 0, -1)
+    end
 
     vim.api.nvim_win_set_option(win, "wrap", false)
 
