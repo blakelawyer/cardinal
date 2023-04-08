@@ -74,7 +74,10 @@ local function Cardinal()
 
     vim.cmd('highlight RedText guifg=#ff0000')
 
-    vim.api.nvim_buf_set_extmark(buf, -1, 0, 0, {
+    -- Create a new namespace for the current buffer
+    local ns_id = vim.api.nvim_create_namespace('cardinal')
+
+    vim.api.nvim_buf_set_extmark(buf, ns_id, 0, 0, {
       end_col = -1,
       hl_group = 'RedText',
       right_gravity = false,
