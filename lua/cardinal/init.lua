@@ -72,10 +72,17 @@ end
 local function Cardinal()
     local buf, win = create_floating_window()
 
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {"Hello from the floating window!"})
+    vim.cmd('highlight RedText guifg=#ff0000')
+
+    vim.api.nvim_buf_set_extmark(buf, 0, 0, {
+      end_col = -1,
+      hl_group = 'RedText',
+      right_gravity = false,
+      virt_text = {"Welcome to Cardinal!"}
+    })
+
     vim.api.nvim_win_set_option(win, "wrap", false)
 
-    -- vim.cmd("redraw")
 end
 
 vim.api.nvim_command('command! Cardinal lua require("cardinal").Cardinal()')
