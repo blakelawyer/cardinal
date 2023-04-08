@@ -15,8 +15,7 @@ local function create_floating_window()
         height = win_height,
         row = row,
         col = col,
-        border = "double",
-        title = "Cardinal"
+        border = "double"
     }
 
     local win = vim.api.nvim_open_win(buf, true, opts)
