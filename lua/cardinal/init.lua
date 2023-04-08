@@ -40,17 +40,13 @@ local function create_floating_window()
     local left_padding = math.floor((win_width - title_len) / 2)
     local right_padding = win_width - left_padding - title_len
 
-    -- local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
-
-    -- vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
-
     -- Draw border lines
     local top_line = border_chars[5] .. string.rep(border_chars[1], left_padding) .. title .. string.rep(border_chars[1], right_padding) .. border_chars[6]
     local middle_line = border_chars[2] .. string.rep(" ", win_width) .. border_chars[2]
     local bottom_line = border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
 
     vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
-    for i = 2, win_height do
+    for i = 2, win_height + 1 do
         vim.api.nvim_buf_set_lines(border_buf, i - 1, i, false, {middle_line})
     end
     vim.api.nvim_buf_set_lines(border_buf, win_height + 1, win_height + 2, false, {bottom_line})
