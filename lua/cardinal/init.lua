@@ -81,6 +81,36 @@ local function set_keymaps(buf)
     end
 end
 
+local function move_cursor(delta)
+    local win = vim.api.nvim_get_current_win()
+    local cursor = vim.api.nvim_win_get_cursor(win)
+    local new_row = cursor[1] + delta
+
+    -- Make sure the new cursor position is within the range of menu options
+    local bird_lines = 5
+    local menu_options = 5
+    local start_line = bird_lines + 2
+
+    if new_row >= start_line and new_row < start_line + menu_options then
+        vim.api.nvim_win_set_cursor(win, {new_row, cursor[2]})
+    end
+end
+
+local function select_option()
+    local win = vim.api.nvim_get_current_win()
+    local cursor = vim.api.nvim_win_get_cursor(win)
+    local selected_option = cursor[1] - (5 + 1)  -- Subtract bird_lines and extra space
+
+    -- Do something with the selected option
+    print("Selected option:", selected_option)
+
+    -- Close the windows
+    local buf = vim.api.nvim_get_current_buf()
+    local border_win = vim.fn.win_findbuf(buf - 1)[1]
+    close_windows(win, border_win)
+end
+
+
 local function Cardinal()
     local buf, win = create_floating_window()
 
