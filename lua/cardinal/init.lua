@@ -17,7 +17,7 @@ local function create_floating_window()
         col = col,
     }
 
-    local win = vim.api.nvim_open_win(buf, false, opts)
+    local win = vim.api.nvim_open_win(buf, true, opts)
 
     -- Border buffer and window
     local border_buf = vim.api.nvim_create_buf(false, true)
