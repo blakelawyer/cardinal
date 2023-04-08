@@ -46,6 +46,17 @@ local function create_floating_window()
 
     vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
 
+    -- Draw border lines
+    local border_lines = {
+        top_line,
+        border_chars[2] .. string.rep(" ", win_width) .. border_chars[2],
+        border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
+    }
+    for i = 2, win_height do
+        vim.api.nvim_buf_set_lines(border_buf, i - 1, i, false, {border_lines[2]})
+    end
+    vim.api.nvim_buf_set_lines(border_buf, win_height, win_height + 1, false, {border_lines[3]})
+
     -- Set border highlight group
     local highlight_group = "CardinalBorder"
     vim.cmd(string.format("highlight %s guifg=#FF0000", highlight_group))
