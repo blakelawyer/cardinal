@@ -17,7 +17,6 @@ local function create_floating_window()
         col = col,
     }
 
-
     -- Border buffer and window
     local border_buf = vim.api.nvim_create_buf(false, true)
     local border_opts = {
@@ -51,7 +50,7 @@ local function create_floating_window()
     local bottom_line = border_chars[8] .. string.rep(border_chars[3], win_width) .. border_chars[7]
 
     vim.api.nvim_buf_set_lines(border_buf, 0, 1, false, {top_line})
-    for i = 2, win_height do
+    for i = 1, win_height do
         vim.api.nvim_buf_set_lines(border_buf, i - 1, i, false, {middle_line})
     end
     vim.api.nvim_buf_set_lines(border_buf, win_height + 1, win_height + 2, false, {bottom_line})
