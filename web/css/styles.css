@@ -1,0 +1,10 @@
+.main-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.main-buttons button {
+  padding: 10px 20px;
+  font-size: 18px;
+}
