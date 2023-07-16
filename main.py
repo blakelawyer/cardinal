@@ -4,6 +4,21 @@ import subprocess
 import atexit
 from surrealdb import Surreal
 
+@eel.expose
+async def call_me():
+    print('in call me')
+
+    # loop = asyncio.get_running_loop()  # Or, if in 3.7, use get_running_loop()
+    # loop.create_task(test())
+    # print(loop)
+    await test()
+
+    return('call me has returned!')
+
+async def test():
+    print("TEST!")
+    return('testing returning!')
+
 # Debug function from JavaScript calls.
 @eel.expose                        
 def echo(message):
@@ -14,6 +29,18 @@ def echo(message):
 def exit():
     print("Exit button pressed!")
     quit()
+
+@eel.expose
+async def store_flashcard(front, back):
+    print(f"Card front: {front}")
+    print(f"Card back: {back}")
+
+    # db = Surreal("http://localhost:9000")
+    # await db.connect()
+    # await db.signin({"user": "root", "pass": "root"})
+    # await db.use("cardinal", "cardinal")
+
+    print('here')
 
 # Start the SurrealDB as background process with automatic cleanup on script exit.
 def start_db():
@@ -49,7 +76,7 @@ async def main():
     start_db()
 
     # Testing the SurrealDB.
-    await test_db()
+    # await test_db()
 
     # Initialize Eel and start the web server.
     eel.init('web', allowed_extensions=['.js', '.html'])

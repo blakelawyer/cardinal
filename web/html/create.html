@@ -4,11 +4,30 @@
     <title>Cardinal</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css" />
     <script type="text/javascript" src="/eel.js"></script>
-    <script type="text/javascript" src="../js/index.js"></script>
+    <script type="text/javascript" src="../js/create.js"></script>
   </head>
 
   <body>
     <h1>Create Flashcards</h1>
+    <form id="flashcard-form">
+      <label for="front">Front:</label><br />
+      <input type="text" id="front" name="front" /><br />
+      <label for="back">Back:</label><br />
+      <input type="text" id="back" name="back" /><br />
+      <button type="button" onclick="saveFlashcard()">Save Flashcard</button>
+    </form>
+    <script>
+      async function saveFlashcard() {
+        var front = document.getElementById("front").value;
+        var back = document.getElementById("back").value;
+
+        await storeFlashcard(front, back);
+        eel.echo("this better return after call me has returned");
+
+        document.getElementById("front").value = "";
+        document.getElementById("back").value = "";
+      }
+    </script>
     <div class="main-buttons">
       <a href="../index.html"><button>Back</button></a>
     </div>
