@@ -11,9 +11,9 @@
     <h1>Create Flashcards</h1>
     <form id="flashcard-form">
       <label for="front">Front:</label><br />
-      <input type="text" id="front" name="front" /><br />
+      <textarea id="front" name="front"></textarea><br />
       <label for="back">Back:</label><br />
-      <input type="text" id="back" name="back" /><br />
+      <textarea id="back" name="back"></textarea><br />
       <button type="button" onclick="saveFlashcard()">Save Flashcard</button>
     </form>
     <script>
@@ -22,7 +22,6 @@
         var back = document.getElementById("back").value;
 
         await storeFlashcard(front, back);
-        eel.echo("this better return after call me has returned");
 
         document.getElementById("front").value = "";
         document.getElementById("back").value = "";
