@@ -1,69 +1,95 @@
-import eel
-import asyncio
-import subprocess
-import atexit
-from surrealdb import Surreal
+from textual import on
+from textual.app import App, ComposeResult
+from textual.reactive import var
+from textual.screen import Screen
+from textual.widgets import Footer, Header, Label, ListItem, ListView, Static
+import json
 
-# Debug function from JavaScript calls.
-@eel.expose                        
-def echo(message):
-    print(f"JavaScript: {message}")
+with open('cards.txt', 'r') as file:
+    cards = json.load(file)
 
-# Exits the program upon Exit button press.
-@eel.expose                        
-def exit():
-    print("Exit button pressed!")
-    quit()
+class Study(Screen):
 
-@eel.expose
-def save_flashcard(front, back):
-    print("Python: Saving flashcard..")
-    print(f"Card front: {front}")
-    print(f"Card back: {back}")
+    card_index = 0
+    
+    def compose(self) -> ComposeResult:
 
-    # Our little trick for executing async code from a normal eel function.
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(store_flashcard(front, back))
+        yield Header()
 
-async def store_flashcard(front, back):
-    print("Python: Storing flashcard in database..")
-    db = Surreal("http://localhost:9000")
-    await db.connect()
-    await db.signin({"user": "root", "pass": "root"})
-    await db.use("cardinal", "cardinal")
+        yield Label("ASDFASDFASDF", classes="border") 
 
-    await db.create(
-        "cards",
-        {
-            "front": front,
-            "back": back,
-        },
-    )
-    result = await db.select("cards")
-    print(result)
+        yield ListView(
+            ListItem(Label("Back"), id="menu"),
+        )
+        yield Footer()
 
-# Start the SurrealDB as background process with automatic cleanup on script exit.
-def start_db():
-    print("Starting SurrealDB..")
+    def on_mount(self) -> None:
+        self.title = "Cardinal"
+        self.sub_title = "Study"
 
-    # Start SurrealDB as a background process.
-    process = subprocess.Popen(["surreal", "start", "--user", "root", "--pass", "root", "memory", "--bind", "0.0.0.0:9000"])
+class Create(Screen):
 
-    # Bind the process to Python script termination to automatically close the DB.
-    def cleanup():
-        process.terminate()
-    atexit.register(cleanup)
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield ListView(
+            ListItem(Label("Back"), id="menu"),
+        )
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.title = "Cardinal"
+        self.sub_title = "Create"
 
 
-def main():
+class Edit(Screen):
 
-    # Startup the SurrealDB.
-    start_db()
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield ListView(
+            ListItem(Label("Back"), id="menu"),
+        )
+        yield Footer()
 
-    # Initialize Eel and start the web server.
-    eel.init('web', allowed_extensions=['.js', '.html'])
-    eel.start('index.html', mode='default')             
+    def on_mount(self) -> None:
+        self.title = "Cardinal"
+        self.sub_title = "Edit"
+
+
+class Cardinal(App):
+
+    CSS_PATH = "styles.tcss"
+
+
+    def compose(self) -> ComposeResult:
+
+        yield Header()
+        
+        # Cardinal Main Menu
+        yield ListView(
+            ListItem(Label("Study"), id="study"),
+            ListItem(Label("Create Cards"), id="create"),
+            ListItem(Label("Edit Cards"), id="edit"),
+        )
+
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.title = "Cardinal"
+        self.sub_title = "Memory's Refrain"
+
+    @on(ListView.Selected)
+    def show_chosen(self, event: ListView.Selected) -> None:
+        if event.item.id == "study":
+            self.push_screen(Study())
+        elif event.item.id == "create":
+            self.push_screen(Create())
+        elif event.item.id == "edit":
+            self.push_screen(Edit())
+        elif event.item.id == "menu":
+            self.pop_screen()
 
 
 if __name__ == "__main__":
-    main()
+    app = Cardinal()
+    app.run()
+
