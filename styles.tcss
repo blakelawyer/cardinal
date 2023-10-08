@@ -12,6 +12,10 @@ ListView {
     align: center middle;
 }
 
-#card-content {
+#card-front {
     border: $success heavy;
+}
+
+#card-back {
+    border: $error heavy;
 }

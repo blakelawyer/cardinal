@@ -1,12 +1,10 @@
 from textual import on
 from textual import work
 from textual.app import App, ComposeResult
-from textual.reactive import var
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, ListItem, ListView, Static, Button, LoadingIndicator
-from textual.containers import Container, Center
+from textual.widgets import Footer, Header, Label, ListItem, ListView, LoadingIndicator
+from textual.containers import Center
 import json
-import time
 import asyncio
 
 def log_message(message):
@@ -18,11 +16,12 @@ with open('cards.txt', 'r') as file:
 
 class Study(Screen):
 
-    card_index = 0 
+    card_index = 0
 
     BINDINGS = [
-        ("escape", "study_key('escape')", "Back"),
+        ("escape", "study_key('escape')", "Main Menu"),
         ("space", "study_key('space')", "Flip"),
+        ("enter", "study_key('enter')", "Next"),
     ]
     
     def compose(self) -> ComposeResult:
@@ -30,10 +29,8 @@ class Study(Screen):
         yield Header()
 
         yield Center(
-            Label("CARD FRONT", shrink=True, id="card-content"),
-            Button("Previous", id="previous"),
-            Button("Flip", id="flip"),
-            Button("Next", id="next"),
+            Label(cards[self.card_index]['front'], shrink=True, id="card-front"),
+            Label(cards[self.card_index]['back'], shrink=True, id="card-back"),
         id="card-container")
 
         yield Footer()
@@ -41,42 +38,66 @@ class Study(Screen):
     def on_mount(self) -> None:
         self.title = "Cardinal"
         self.sub_title = "Study"
+        self.query_one("#card-back").visible = False
 
     def action_study_key(self, key) -> None:
         if key == 'escape':
+            log_message('Back to Main Menu From Study')
             self.app.pop_screen()
         elif key == 'space':
-            log_message('flip card!')
+            log_message('Flip card!')
+            self.query_one("#card-back").visible = True
+        elif key == 'enter':
+            if self.card_index < len(cards) - 1:
+                log_message('Next card!')
+                self.card_index += 1
+                self.query_one("#card-front", Label).update(cards[self.card_index]['front'])
+                self.query_one("#card-back", Label).update(cards[self.card_index]['back'])
+                self.query_one("#card-back").visible = False
+            else:
+                log_message('Done studying, returning to main menu!')
+                self.app.pop_screen()
+
 
 class Create(Screen):
 
-    BINDINGS = []
+    BINDINGS = [
+        ("escape", "create_key('escape')", "Back"),
+    ]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield ListView(
-            ListItem(Label("Back"), id="menu"),
-        )
         yield Footer()
 
     def on_mount(self) -> None:
         self.title = "Cardinal"
         self.sub_title = "Create"
 
+    def action_create_key(self, key) -> None:
+        if key == 'escape':
+            log_message('Back to Main Menu From Create')
+            self.app.pop_screen()
+
+
 class Edit(Screen):
 
-    BINDINGS = []
+    BINDINGS = [
+        ("escape", "edit_key('escape')", "Back"),
+    ]
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield ListView(
-            ListItem(Label("Back"), id="menu"),
-        )
         yield Footer()
 
     def on_mount(self) -> None:
         self.title = "Cardinal"
         self.sub_title = "Edit"
+
+    def action_edit_key(self, key) -> None:
+        if key == 'escape':
+            log_message('Back to Main Menu From Edit')
+            self.app.pop_screen()
+
 
 class Menu(Screen):
 
@@ -137,7 +158,7 @@ class Cardinal(App):
 
     @work
     async def simulate_loading(self):
-        await asyncio.sleep(3)
+        await asyncio.sleep(1)
         self.push_screen(Menu())
 
 
