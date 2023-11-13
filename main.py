@@ -2,7 +2,8 @@ from textual import on
 from textual import work
 from textual.app import App, ComposeResult
 from textual.screen import Screen
-from textual.widgets import Footer, Header, Label, ListItem, ListView, LoadingIndicator
+from textual.widgets import Footer, Header, Label, ListItem, ListView, LoadingIndicator, Input, OptionList
+from textual.widgets.option_list import Option, Separator
 from textual.containers import Center
 import json
 import asyncio
@@ -39,6 +40,7 @@ class Study(Screen):
         self.title = "Cardinal"
         self.sub_title = "Study"
         self.query_one("#card-back").visible = False
+        self.card_revealed = False
 
     def action_study_key(self, key) -> None:
         if key == 'escape':
@@ -47,13 +49,15 @@ class Study(Screen):
         elif key == 'space':
             log_message('Flip card!')
             self.query_one("#card-back").visible = True
-        elif key == 'enter':
+            self.card_revealed = True
+        elif key == 'enter' and self.card_revealed:
             if self.card_index < len(cards) - 1:
                 log_message('Next card!')
                 self.card_index += 1
                 self.query_one("#card-front", Label).update(cards[self.card_index]['front'])
                 self.query_one("#card-back", Label).update(cards[self.card_index]['back'])
                 self.query_one("#card-back").visible = False
+                self.card_revealed = False
             else:
                 log_message('Done studying, returning to main menu!')
                 self.app.pop_screen()
@@ -67,36 +71,82 @@ class Create(Screen):
 
     def compose(self) -> ComposeResult:
         yield Header()
+
+        yield Input(placeholder="Front", id='card-front')
+        yield Input(placeholder="Back", id='card-back')
+
         yield Footer()
 
     def on_mount(self) -> None:
+        log_message(cards)
         self.title = "Cardinal"
         self.sub_title = "Create"
+        self.front = None
+        self.back = None
 
     def action_create_key(self, key) -> None:
         if key == 'escape':
             log_message('Back to Main Menu From Create')
             self.app.pop_screen()
 
+    def on_input_submitted(self, event):
+        if len(event.value) > 0:
+            if event.input.id == "card-front":
+                log_message(f"Front of card submitted: {event.value}")
+                self.front = event.value
+            else:
+                log_message(f"Back of card submitted: {event.value}")
+                self.back = event.value
+
+            if self.front is not None and self.back is not None:
+                new_card = {"front": self.front, "back": self.back}
+                log_message(f"Creating card: {new_card}")
+                cards.append(new_card)
+                with open('cards.txt', 'w') as file:
+                    json.dump(cards, file, indent=4)
+                self.front = None
+                self.back = None
+                self.query_one("#card-front", Input).value = ""
+                self.query_one("#card-back", Input).value = ""
+
 
 class Edit(Screen):
 
     BINDINGS = [
         ("escape", "edit_key('escape')", "Back"),
+        ("j", "vim_key('j')", "Down"),
+        ("k", "vim_key('k')", "Up"),
+        ("enter", "select", "Select")
     ]
 
     def compose(self) -> ComposeResult:
         yield Header()
+        option_items = []
+        for index, card in enumerate(cards):
+            option_items.append(Option(card["front"], id=str(index)))
+            option_items.append(Separator())
+        yield OptionList(*option_items, id="card-options")
         yield Footer()
 
     def on_mount(self) -> None:
         self.title = "Cardinal"
         self.sub_title = "Edit"
+        self.set_focus(self.query_one("#card-options"))
+
+    def on_option_list_option_selected(self, event: OptionList.OptionHighlighted):
+        log_message(event.option.id)
 
     def action_edit_key(self, key) -> None:
         if key == 'escape':
             log_message('Back to Main Menu From Edit')
             self.app.pop_screen()
+
+    def action_vim_key(self, key) -> None:
+        if key == 'j':
+            self.query_one("#card-options", OptionList).action_cursor_down()
+        elif key == 'k':
+            self.query_one("#card-options", OptionList).action_cursor_up()
+
 
 
 class Menu(Screen):

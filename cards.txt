@@ -1,6 +1,46 @@
 [
-    {"front": "What is the capital of France?", "back": "Paris"},
-    {"front": "What is the capital of Germany?", "back": "Berlin"},
-    {"front": "What is the capital of Italy?", "back": "Rome"}
+    {
+        "front": "What is the capital of France?",
+        "back": "Paris"
+    },
+    {
+        "front": "What is the capital of Germany?",
+        "back": "Berlin"
+    },
+    {
+        "front": "What is the capital of Italy?",
+        "back": "Rome"
+    },
+    {
+        "front": "What is my name?",
+        "back": "Blake"
+    },
+    {
+        "front": "asdf",
+        "back": "sadfsdf"
+    },
+    {
+        "front": "asdfasdfasdf",
+        "back": "asdfasdfasdfasdf"
+    },
+    {
+        "front": "asdfasdfasdf",
+        "back": "asdfsdfffffff"
+    },
+    {
+        "front": "",
+        "back": ""
+    },
+    {
+        "front": "Howdy partner!",
+        "back": "ok ok ok"
+    },
+    {
+        "front": "Hello, how are you!",
+        "back": "I'm doing fine"
+    },
+    {
+        "front": "asdfasdfsd",
+        "back": "asdfasdf"
+    }
 ]
-
