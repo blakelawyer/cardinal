@@ -1,2 +1,5 @@
-venv
-log.txt
+target
+Cargo.lock
+cardinal.db
+anki
+
