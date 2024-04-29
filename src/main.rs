@@ -4,6 +4,8 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 use term_size;
 use regex::Regex;
+use std::fmt::Write;
+use std::process;
 
 fn load_database() -> Result<(), rusqlite::Error> {
 
@@ -69,6 +71,28 @@ fn main() -> io::Result<()> {
             
             inside_card = false;
             card_count += 1;
+            
+            // Extract the raw card information without Anki formatting.
+            let re = Regex::new(r"\t(.*)").unwrap();
+    
+            if let Some(caps) = re.captures(&card_information) {
+                let extracted_format = caps[1].to_string(); 
+                card_information.clear(); 
+                write!(card_information, "{}", extracted_format).unwrap(); 
+            } else {
+                println!("No match found!");
+                process::exit(0);
+            }
+            
+            println!("{}", card_information.blue());
+
+            // Remove inactive clozes.
+            let re = Regex::new(r#"<span class=""cloze-inactive"" data-ordinal=""."">(.*?)<\/span>"#).unwrap(); 
+            card_information = re.replace_all(&card_information, "$1").to_string();
+
+            // Remove <br> at the end.
+            let re = Regex::new(r#"<br>"#).unwrap(); 
+            card_information = re.replace_all(&card_information, "$1").to_string();
 
             println!("{}", card_information.white());
             println!("{}", card_divider.red());
