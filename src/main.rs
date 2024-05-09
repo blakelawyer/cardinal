@@ -1,13 +1,22 @@
 use colored::*;
-use rusqlite::{Connection};
+use rusqlite::{params, Connection, Result as SqlResult};
 use std::fs::File;
-use std::io::{self, BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Write};
 use term_size;
 use regex::Regex;
-use std::fmt::Write;
+use std::fmt::Write as FmtWrite;
 use std::process;
 
-fn load_database() -> Result<(), rusqlite::Error> {
+/// Define a struct representing a card record
+#[derive(Debug)]
+struct Card {
+    id: i32,
+    front: String,
+    back: String,
+    deck: String,
+}
+
+fn load_database() -> Result<Connection, rusqlite::Error> {
 
     let conn = Connection::open("cardinal.db")?;
 
@@ -15,15 +24,27 @@ fn load_database() -> Result<(), rusqlite::Error> {
         "CREATE TABLE IF NOT EXISTS cards (
             id INTEGER PRIMARY KEY,
             front TEXT NOT NULL,
-            back TEXT NOT NULL
+            back TEXT NOT NULL,
+            deck TEXT NOT NULL
         )",
         [],
+    )?; 
+    
+    Ok(conn)
+
+}
+
+fn insert_card(conn: &Connection, front: &str, back: &str, deck: &str) -> SqlResult<()> {
+    conn.execute(
+        "INSERT INTO cards (front, back, deck) VALUES (?1, ?2, ?3)",
+        params![front, back, deck],
     )?;
 
     Ok(())
+
 }
 
-fn main() -> io::Result<()> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let terminal_width = if let Some((width, _)) = term_size::dimensions() {
         width
@@ -33,8 +54,8 @@ fn main() -> io::Result<()> {
     
     let card_divider = "=".repeat(terminal_width);
 
-    let _ = load_database();
-
+    let conn = load_database()?;
+    
     // Open cards file for parsing.
     let file_path = "anki/decks.txt";
 
@@ -56,7 +77,7 @@ fn main() -> io::Result<()> {
             card_information.clear();
             card_information += &line; 
             
-        } else if line == "\"[" {
+        } else if line == "\"" {
 
             inside_card = false;
             card_count += 1;
@@ -116,6 +137,41 @@ fn main() -> io::Result<()> {
     }
 
     println!("{} card count: {}", "main:".green(), card_count);
+
+    let mut current_deck = String::new();
+    
+    for (card_information, card_cloze) in &cards {
+
+        println!("{}", "Card Front:".blue());
+        println!("{}", card_information.white());
+        println!("{}", "Card Back:".blue());
+        println!("{}", card_cloze.white());
+
+        // Prompt for the deck name with a simple input
+        print!(
+            "Enter deck name or press Enter to keep '{}': ",
+            current_deck
+        );
+        io::stdout().flush().unwrap(); // Ensure prompt is displayed immediately
+
+        // Read the deck name from standard input
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+
+        // Trim any whitespace and update the deck name if not empty
+        let input_trimmed = input.trim();
+        if !input_trimmed.is_empty() {
+            current_deck = input_trimmed.to_string();
+        }
+
+        // Display the finalized deck name after entering it
+        println!("\nDeck: {}", current_deck.blue());
+        
+        println!("{}", card_divider.red());
+
+        insert_card(&conn, card_information, card_cloze, &current_deck);
+
+    }
 
     Ok(())
 }
