@@ -1,31 +1,21 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cardinal</title>
-    <script type="module" src="/main.js" defer></script>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="css/styles.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cardinal</title>
+        <script type="module" src="js/main.js" defer></script>
+    </head>
 
-  <body>
-    <div class="container">
-      <h1>Welcome to Cardinal!</h1>
+    <body>
+        <h1>Cardinal - Memory's Refrain</h1>
 
-      <div class="row">
-        <a href="https://github.com/blakelawyer/cardinal" target="_blank">
-          <img src="/assets/cardinal.svg" class="logo cardinal" alt="Cardinal Logo" />
-        </a>
-      </div>
+        <div class="row">
+            <button type="button" id="study-button">Study</button>
+            <button type="button" id="edit-button">Edit</button>
+            <button type="button" id="create-button">Create</button>
+        </div>
+    </body>
 
-      <p>Memory's Refrain</p>
-
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p id="greet-msg"></p>
-    </div>
-  </body>
 </html>
