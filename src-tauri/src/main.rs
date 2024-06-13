@@ -67,6 +67,11 @@ fn run_query(query: &str) -> Result<Vec<Vec<String>>, String> {
 }
 
 #[tauri::command]
+fn log(message: String) {
+    println!("{}", message);
+}
+
+#[tauri::command]
 fn study() {
     println!("study()");
     set_state("study_menu");
@@ -141,6 +146,11 @@ fn edit_deck(deck: String) -> Result<Vec<Card>, String> {
 }
 
 #[tauri::command]
+fn edit_card(id: i32, front: String, back: String, deck: String) {
+    println!("edit_card(id: {}, front: {}, back: {}, deck: {})", id, front, back, deck);
+}
+
+#[tauri::command]
 fn create() {
     println!("create()");
     set_state("create_menu");
@@ -166,7 +176,7 @@ fn back() -> Result<String, String> {
         set_state("edit_menu")?;
         "../html/edit"
     } else {
-        "../index" // Default page if state does not match any condition
+        "../index" 
     };
     
     Ok(next_page.to_string())
@@ -174,7 +184,7 @@ fn back() -> Result<String, String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![study, edit, create, back, edit_deck])
+        .invoke_handler(tauri::generate_handler![log, study, edit, create, back, edit_deck, edit_card])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
