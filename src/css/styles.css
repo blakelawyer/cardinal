@@ -1,0 +1,51 @@
+body {
+    background-color: #202020;
+    color: #c51e3a;
+    font-family: 'JetBrains Mono', monospace; 
+    display: flex;
+    flex-direction: column; /* Aligns items in a column */
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ensures the body takes the full height of the viewport */
+    margin: 0;
+}
+
+h1 {
+    color: #c51e3a;
+    text-align: center;
+    margin-bottom: 2vh; /* Provides spacing between the header and the buttons */
+    width: 100%; /* Ensures it spans the full width of the viewport */
+    position: fixed; /* Makes the header stay in place while scrolling */
+    top: 0; /* Positions it at the very top of the viewport */
+    left: 0; /* Aligns it to the left edge */
+    padding: 10px 0; /* Gives some padding above and below the text */
+    background-color: #202020; /* Optional: adds background color matching the body for legibility */
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 50vw; 
+    height: 50vh; 
+    gap: 10px;
+    margin-top: 5vh; /* Adds space to account for the fixed header */
+}
+
+button {
+    background-color: #c51e3a;
+    color: #202020;
+    font-family: 'JetBrains Mono', monospace;
+    border: none;
+    padding: 100px 20px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; 
+}
+
+button:hover {
+    background-color: #f24f65;
+}
+
