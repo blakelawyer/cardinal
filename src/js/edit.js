@@ -6,8 +6,6 @@ function createDeckButtons(decks, container) {
         const button = document.createElement('button');
         button.textContent = deck;
         button.addEventListener('click', () => {
-            invoke('log', { message: `Deck ${deck} button clicked`});
-            
             document.getElementById('card-container').innerHTML = '';
             container.innerHTML = '';
 
@@ -37,8 +35,6 @@ function createCardElements(cards, container) {
         cardButton.dataset.deck = card.deck;
 
         cardButton.addEventListener('click', () => {
-            invoke('log', { message: `Selected card: Deck: ${cardButton.dataset.deck}, Card ID: ${cardButton.dataset.id}`});
-
 
             const idAsInteger = parseInt(cardButton.dataset.id, 10);
             invoke('edit_card', {
@@ -48,21 +44,30 @@ function createCardElements(cards, container) {
                 deck: cardButton.dataset.deck
             })
             .then(() => {
-                invoke('log', {message: `Editing card..`});
                 container.innerHTML = '';
 
-                 // Display editable fields for front and back
                 container.innerHTML += `
                     <textarea id="edit-front">${cardButton.dataset.front}</textarea>
                     <textarea id="edit-back">${cardButton.dataset.back}</textarea>
                     <button type="button" id="save-button">Save Changes</button>
                 `;
 
-                // Event listener for save button
                 document.getElementById('save-button').addEventListener('click', () => {
                     const updatedFront = document.getElementById('edit-front').value;
                     const updatedBack = document.getElementById('edit-back').value;
-                    // Implement save logic here
+                    const deck = cardButton.dataset.deck;
+                    invoke('update_card', {
+                        id: idAsInteger,
+                        front: updatedFront,
+                        back: updatedBack,
+                        deck: deck
+                    })
+                    .then(() => {
+                        invoke('log', {message: `Card updated successfully.`});
+                    })
+                    .catch(error => {
+                        invoke('log', {message: `Error updating card: ${error}`});
+                    });
                 });
 
             })

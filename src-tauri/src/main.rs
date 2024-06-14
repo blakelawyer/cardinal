@@ -15,6 +15,7 @@ fn get_state() -> Result<String, String> {
 }
 
 fn set_state(new_state: &str) -> Result<(), String> {
+    println!("State: {}", new_state);
     let mut state = STATE.lock().map_err(|e| e.to_string())?;
     *state = new_state.to_string();
     Ok(())
@@ -73,13 +74,11 @@ fn log(message: String) {
 
 #[tauri::command]
 fn study() {
-    println!("study()");
     set_state("study_menu");
 }
 
 #[tauri::command]
 fn edit() -> Result<Vec<String>, String> {
-    println!("edit()");
     set_state("edit_menu");
 
     let query = "SELECT DISTINCT deck FROM cards";
@@ -100,16 +99,11 @@ fn edit() -> Result<Vec<String>, String> {
         }
     }
 
-    for deck in &decks {
-        println!("Deck: {}", deck);
-    }
-
     Ok(decks)
 }
 
 #[tauri::command]
 fn edit_deck(deck: String) -> Result<Vec<Card>, String> {
-    println!("edit_deck({})", deck);
     set_state("editing_deck");
 
     let query = format!("SELECT id, front, back, deck FROM cards WHERE deck = '{}'", deck);
@@ -137,28 +131,39 @@ fn edit_deck(deck: String) -> Result<Vec<Card>, String> {
         }
     }
 
-    for card in &cards {
-        println!("{:?}", card);
-    }
-
     Ok(cards)
 
 }
 
 #[tauri::command]
 fn edit_card(id: i32, front: String, back: String, deck: String) {
-    println!("edit_card(id: {}, front: {}, back: {}, deck: {})", id, front, back, deck);
+    set_state("edit_card");
+}
+
+#[tauri::command]
+fn update_card(id: i32, front: String, back: String, deck: String) -> Result<(), String> {
+    set_state("update_card");
+
+    let query = format!("UPDATE cards SET front = '{}', back = '{}' WHERE id = {} AND deck = '{}'", front, back, id, deck);
+
+    match run_query(&query) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            println!("Failed to run query: {}", e);
+            Err(e.to_string())
+        }
+    }
+
 }
 
 #[tauri::command]
 fn create() {
-    println!("create()");
     set_state("create_menu");
 }
 
 #[tauri::command]
 fn back() -> Result<String, String> {
-    println!("back()");
+    set_state("back");
 
     let current_state = get_state()?;
     println!("Current state: {}", current_state);
@@ -176,6 +181,7 @@ fn back() -> Result<String, String> {
         set_state("edit_menu")?;
         "../html/edit"
     } else {
+        set_state("main_menu")?;
         "../index" 
     };
     
@@ -184,7 +190,7 @@ fn back() -> Result<String, String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![log, study, edit, create, back, edit_deck, edit_card])
+        .invoke_handler(tauri::generate_handler![log, study, edit, create, back, edit_deck, edit_card, update_card])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

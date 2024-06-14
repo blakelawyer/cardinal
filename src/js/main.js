@@ -10,7 +10,9 @@ function setupButtonListeners() {
         studyButton.addEventListener('click', () => {
             invoke('study', {}).then(() => {
                 window.location.href = 'html/study.html';
-            }).catch((error) => console.error(error));
+            }).catch(error => {
+                invoke('log', {message: `Error with study button: ${error}`});
+            });
         });
     }
 
@@ -20,7 +22,9 @@ function setupButtonListeners() {
             invoke('edit', {}).then((decks) => {
                 localStorage.setItem('decks', JSON.stringify(decks));
                 window.location.href = 'html/edit.html';
-            }).catch((error) => console.error(error));
+            }).catch(error => {
+                invoke('log', {message: `Error with edit button: ${error}`});
+            });
         });
     }
 
@@ -28,7 +32,9 @@ function setupButtonListeners() {
         createButton.addEventListener('click', () => {
             invoke('create', {}).then(() => {
                 window.location.href = 'html/create.html';
-            }).catch((error) => console.error(error));
+            }).catch(error => {
+                invoke('log', {message: `Error with create button: ${error}`});
+            });
         });
     }
 
@@ -36,7 +42,9 @@ function setupButtonListeners() {
         backButton.addEventListener('click', () => {
             invoke('back', {}).then(() => {
                 window.location.href = '../index.html';
-            }).catch((error) => console.error(error));
+            }).catch(error => {
+                invoke('log', {message: `Error with back button: ${error}`});
+            });
         });
     }
 }
