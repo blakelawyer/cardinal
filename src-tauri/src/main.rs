@@ -144,7 +144,8 @@ fn edit_card(id: i32, front: String, back: String, deck: String) {
 fn update_card(id: i32, front: String, back: String, deck: String) -> Result<(), String> {
     set_state("update_card");
 
-    let query = format!("UPDATE cards SET front = '{}', back = '{}' WHERE id = {} AND deck = '{}'", front, back, id, deck);
+    let query = format!("UPDATE cards SET front = '{}', back = '{}', modified_at = CURRENT_TIMESTAMP WHERE id = {} AND deck = '{}'", 
+                        front, back, id, deck);
 
     match run_query(&query) {
         Ok(_) => Ok(()),
@@ -153,12 +154,73 @@ fn update_card(id: i32, front: String, back: String, deck: String) -> Result<(),
             Err(e.to_string())
         }
     }
-
 }
 
 #[tauri::command]
-fn create() {
+fn create() -> Result<Vec<String>, String> {
     set_state("create_menu");
+
+    let query = "SELECT DISTINCT deck FROM cards";
+
+    let raw_results = match run_query(query) {
+        Ok(results) => results,
+        Err(e) => {
+            println!("Failed to run query: {}", e);
+            return Err(e);
+        }
+    };
+
+    let mut decks = Vec::new();
+
+    for row in raw_results {
+        for value in row {
+            decks.push(value); 
+        }
+    }
+
+    Ok(decks)
+}
+
+#[tauri::command]
+fn create_card(front: String, back: String, deck: String) -> Result<String, String> {
+    let ease_factor = 2.5;
+
+    let query = format!(
+        "INSERT INTO cards (front, back, deck, ease_factor, due, created_at, modified_at) \
+         VALUES ('{}', '{}', '{}', {}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+        front, back, deck, ease_factor
+    );
+
+    match run_query(&query) {
+        Ok(_) => {
+            println!("Card created successfully!");
+            Ok("Card created successfully!".to_string())
+        },
+        Err(e) => {
+            println!("Failed to run query: {}", e);
+            Err(format!("Failed to run query: {}", e))
+        }
+    }
+}
+
+
+#[tauri::command]
+fn delete_card(id: i32, front: String, back: String, deck: String) -> Result<String, String> {
+
+    //let query = format!("INSERT INTO cards (front, back, deck) VALUES ('{}', '{}', '{}')", front, back, deck);
+    let query = format!("DELETE FROM cards WHERE id = {} AND front = '{}' AND back = '{}' AND deck = '{}'", id, front, back, deck);
+
+    match run_query(&query) {
+        Ok(_) => {
+            println!("Card deleted successfully!");
+            Ok("Card deleted successfully!".to_string())
+        },
+        Err(e) => {
+            println!("Failed to run query: {}", e);
+            Err(format!("Failed to run query: {}", e))
+        }
+    }
+
 }
 
 #[tauri::command]
@@ -190,7 +252,7 @@ fn back() -> Result<String, String> {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![log, study, edit, create, back, edit_deck, edit_card, update_card])
+        .invoke_handler(tauri::generate_handler![log, study, edit, create, back, edit_deck, edit_card, update_card, create_card, delete_card])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

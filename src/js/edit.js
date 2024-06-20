@@ -22,9 +22,9 @@ function createDeckButtons(decks, container) {
 }
 
 function createCardElements(cards, container) {
-    container.innerHTML = ''; 
+    container.innerHTML = '';
     cards.forEach(card => {
-        const cardButton = document.createElement('button'); 
+        const cardButton = document.createElement('button');
         cardButton.className = 'card';
         const displayText = card.front.length > 50 ? `${card.front.substring(0, 50)}...` : card.front;
         cardButton.innerHTML = `Front: ${displayText} <br> Back: ${card.back}`;
@@ -35,10 +35,9 @@ function createCardElements(cards, container) {
         cardButton.dataset.deck = card.deck;
 
         cardButton.addEventListener('click', () => {
-
             const idAsInteger = parseInt(cardButton.dataset.id, 10);
             invoke('edit_card', {
-                id: idAsInteger, 
+                id: idAsInteger,
                 front: cardButton.dataset.front,
                 back: cardButton.dataset.back,
                 deck: cardButton.dataset.deck
@@ -50,6 +49,7 @@ function createCardElements(cards, container) {
                     <textarea id="edit-front">${cardButton.dataset.front}</textarea>
                     <textarea id="edit-back">${cardButton.dataset.back}</textarea>
                     <button type="button" id="save-button">Save Changes</button>
+                    <button type="button" id="delete-button">Delete</button>
                 `;
 
                 document.getElementById('save-button').addEventListener('click', () => {
@@ -67,6 +67,22 @@ function createCardElements(cards, container) {
                     })
                     .catch(error => {
                         invoke('log', {message: `Error updating card: ${error}`});
+                    });
+                });
+
+                document.getElementById('delete-button').addEventListener('click', () => {
+                    invoke('delete_card', {
+                        id: idAsInteger,
+                        front: cardButton.dataset.front,
+                        back: cardButton.dataset.back,
+                        deck: cardButton.dataset.deck
+                    })
+                    .then(() => {
+                        invoke('log', {message: `Card deleted successfully.`});
+                        window.location.href = "../html/edit.html";
+                    })
+                    .catch(error => {
+                        invoke('log', {message: `Error deleting card: ${error}`});
                     });
                 });
 

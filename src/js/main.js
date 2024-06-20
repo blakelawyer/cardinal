@@ -30,7 +30,8 @@ function setupButtonListeners() {
 
     if (createButton) {
         createButton.addEventListener('click', () => {
-            invoke('create', {}).then(() => {
+            invoke('create', {}).then((decks) => {
+                localStorage.setItem('decks', JSON.stringify(decks));
                 window.location.href = 'html/create.html';
             }).catch(error => {
                 invoke('log', {message: `Error with create button: ${error}`});

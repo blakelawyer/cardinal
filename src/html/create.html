@@ -5,13 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create</title>
-    <script type="module" src="../js/main.js" defer></script>
+    <script type="module" src="../js/create.js" defer></script>
 </head>
 
 <body>
     <h1>Create</h1>
+    <div id="deck-container">
+        <select id="deck-select" name="deck-select">
+            <option value="" disabled selected>Select a deck:</option>
+        </select>
+    </div>
+    <textarea id="front-text" placeholder="Front of flashcard"></textarea>
+    <textarea id="back-text" placeholder="Back of flashcard"></textarea>
+    <button type="button" id="create-flashcard-button">Create Flashcard</button>
     <button type="button" id="back-button">Back</button>
 </body>
 
 </html>
-
