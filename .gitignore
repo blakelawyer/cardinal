@@ -1,6 +1,1 @@
-target
-Cargo.lock
-cardinal.db
-backup-cardinal.db
-anki
-
+venv
