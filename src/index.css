@@ -1,0 +1,22 @@
+:root {
+  --akira-bg: #1f1f39;
+  --akira-fg: #9aa4ca;
+  --akira-red: #ff6e6e;
+  --akira-green: #6be28d;
+  --akira-yellow: #fbdda7;
+  --akira-blue: #b3e3f2;
+  --akira-white: #ffffff;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+  color: var(--akira-fg);
+  background-color: var(--akira-bg);
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
