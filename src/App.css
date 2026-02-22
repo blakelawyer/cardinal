@@ -6,27 +6,295 @@
   left: 0;
 }
 
-.controls {
+.giant-title {
   position: fixed;
-  bottom: 2rem;
+  top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--akira-yellow);
+  z-index: 1;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0;
+  pointer-events: none;
+}
+
+.controls {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  min-width: 10rem;
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1rem;
   z-index: 1;
 }
 
-.controls label {
+.add-branch-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: #1a1a2e;
+  color: var(--akira-green);
+  border: 1px solid var(--akira-green);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.add-branch-btn:hover {
+  background: var(--akira-green);
+  color: #1a1a2e;
+}
+
+.controls > button:has(.grow-btn-label) {
+  width: 100%;
+  padding: 0.5rem;
+  background: #1a1a2e;
+  color: var(--akira-yellow);
+  border: 1px solid var(--akira-yellow);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.controls > button:has(.grow-btn-label):hover {
+  background: var(--akira-yellow);
+  color: #1a1a2e;
+}
+
+.leaf-count {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--akira-green);
+  padding-bottom: 0.3rem;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--akira-red);
+  border-bottom: 1px solid var(--akira-red);
+  padding-bottom: 0.3rem;
+}
+
+.section-label + .section-label,
+.control + .section-label,
+.controls > button + .section-label {
+  margin-top: 0.5rem;
+}
+
+.control {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
+}
+
+.control-label {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--akira-fg);
 }
 
-.controls input[type="range"] {
-  width: 10rem;
-  accent-color: var(--akira-blue);
+.control-buttons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.control-buttons button {
+  width: 2rem;
+  height: 2rem;
+  background: #1a1a2e;
+  color: var(--akira-blue);
+  border: 1px solid var(--akira-blue);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-buttons button:hover {
+  background: var(--akira-blue);
+  color: #1a1a2e;
+}
+
+.range-sep {
+  width: 0.3rem;
+}
+
+.lock-btn {
+  width: auto !important;
+  padding: 0 0.5rem;
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--akira-yellow) !important;
+  border-color: var(--akira-yellow) !important;
+}
+
+.lock-btn:hover {
+  background: var(--akira-yellow) !important;
+  color: #1a1a2e !important;
+}
+
+.lock-btn.locked {
+  background: var(--akira-yellow) !important;
+  color: #1a1a2e !important;
+}
+
+.plant-tree-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  background: #1a1a2e;
+  color: var(--akira-green);
+  border: 1px solid var(--akira-green);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 1;
+}
+
+.plant-tree-btn:hover {
+  background: var(--akira-green);
+  color: #1a1a2e;
+}
+
+.plant-tree-btn.stop {
+  color: var(--akira-red);
+  border-color: var(--akira-red);
+}
+
+.plant-tree-btn.stop:hover {
+  background: var(--akira-red);
+  color: #1a1a2e;
+}
+
+.bottom-right {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.camera-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--akira-yellow);
+  opacity: 0.8;
+}
+
+.fly-btn {
+  padding: 0.5rem 1.5rem;
+  background: #1a1a2e;
+  color: var(--akira-blue);
+  border: 1px solid var(--akira-blue);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fly-btn:hover {
+  background: var(--akira-blue);
+  color: #1a1a2e;
+}
+
+.mode-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vote-bar {
+  position: fixed;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.5rem;
+  z-index: 1;
+}
+
+.vote-btn {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #1a1a2e;
+  border: 2px solid var(--akira-blue);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vote-btn:hover {
+  background: var(--akira-blue);
+}
+
+.vote-btn.up {
+  border-color: var(--akira-green);
+}
+
+.vote-btn.up:hover {
+  background: var(--akira-green);
+}
+
+.vote-btn.down {
+  border-color: var(--akira-red);
+}
+
+.vote-btn.down:hover {
+  background: var(--akira-red);
+}
+
+.section-lock-btn {
+  float: right;
+  background: none;
+  border: 1px solid var(--akira-yellow);
+  border-radius: 3px;
+  color: var(--akira-yellow);
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  line-height: 1.4;
+}
+
+.section-lock-btn:hover {
+  background: var(--akira-yellow);
+  color: #1a1a2e;
+}
+
+.section-lock-btn.locked {
+  background: var(--akira-yellow);
+  color: #1a1a2e;
 }
